@@ -10,7 +10,7 @@
 #include <net/if_arp.h>
 #include "network_interface.h"
 
-int get_network_interfaces(NetworkInterface** interfaces, int* count) {
+int getNetworkInterfaces (NetworkInterface** interfaces, int* count) {
     struct ifaddrs *ifaddr, *ifa;
     int interfaceCount = 0;
 

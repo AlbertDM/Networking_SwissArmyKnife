@@ -1,0 +1,53 @@
+project('network_interface', 'c')
+
+# Get the host operating system
+host_os = meson.get_compiler('c').get_id()
+
+# Sources
+sources = []
+if host_os == 'windows'
+    sources += 'network_interface_windows.c'
+else
+    sources += 'network_interface_linux.c'
+endif
+
+# Library
+library_type = ''
+if host_os == 'windows'
+    library_type = 'shared_library'
+else
+    library_type = 'shared_module'
+endif
+
+library_kwargs = library_type_kwargs(library_type)
+
+network_interface_lib = library('network_interface',
+    sources: sources,
+    include_directories: 'include',
+    dependencies: ['other_dependencies'],
+    install: true,
+    build_by_default: false,
+    buildtype: 'release',
+    **library_kwargs
+)
+
+# Test executable
+executable('test_network_interface',
+    sources: 'test_network_interface.c',
+    dependencies: [network_interface_lib]
+)
+
+# Install
+install_headers('include/network_interface.h')
+install_data('LICENSE', rename: 'LICENSE.txt')
+
+# Function to determine library type
+fun library_type_kwargs(libtype) {
+    if libtype == 'shared_library'
+        return {'dllname': 'network_interface.dll'}
+    elif libtype == 'shared_module'
+        return {'soversion': '-1', 'install_rpath': '/usr/local/lib'}
+    else
+        return {}
+    endif
+} # endfunc
