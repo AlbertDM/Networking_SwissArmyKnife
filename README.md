@@ -1,4 +1,4 @@
-# Ethernet_SwissArmyKnife
+# Networking_SwissArmyKnife
 
 When creating a library in C to work with Ethernet interfaces, here are some ideas for the functionality the library could provide:
 
@@ -35,3 +35,36 @@ ADM Features:
 * io_uring
 * Python Wrapper
 * application tests in Python
+
+Investigate about:
+* Zero-Copy and DMA.
+* Receive Side Scaling
+* BPF vs eBPF
+* PF_RING
+
+
+### io_uring vs PF_RING
+
+
+PF_RING and io_uring are two different technologies that serve different purposes in the realm of networking and I/O operations. Here's a comparison between the two:
+
+PF_RING:
+1. Purpose: PF_RING focuses on high-speed packet capture, processing, and analysis in network applications.
+2. Features: It provides efficient packet capture, scaling across multiple CPU cores and network interfaces, packet filtering and classification, packet timestamping, and integration with other tools.
+3. Use Cases: PF_RING is commonly used in network monitoring, traffic analysis, intrusion detection and prevention systems, and performance monitoring.
+4. Operating System Support: PF_RING is available for Linux, FreeBSD, and Windows.
+
+io_uring:
+1. Purpose: io_uring is an I/O interface for asynchronous and efficient I/O operations, including file I/O and network socket operations.
+2. Features: It provides high-performance asynchronous I/O, reducing CPU overhead and improving scalability compared to traditional synchronous I/O methods. It supports various types of I/O operations, including read, write, accept, and connect.
+3. Use Cases: io_uring is useful in applications that require high-performance I/O operations, such as web servers, databases, and file systems.
+4. Operating System Support: io_uring is primarily available on Linux systems.
+
+Key Differences:
+1. Focus: PF_RING primarily focuses on network packet capture and analysis, while io_uring is a more general-purpose I/O interface for efficient I/O operations.
+2. Scope: PF_RING is specifically designed for high-speed packet processing, including features like packet filtering and timestamping. io_uring, on the other hand, is a broader I/O interface covering various types of I/O operations.
+3. Application Domain: PF_RING is commonly used in network monitoring and analysis applications, while io_uring is applicable to a wider range of applications involving I/O operations.
+4. Operating System Support: PF_RING is available on Linux, FreeBSD, and Windows, while io_uring is primarily supported on Linux systems.
+
+In summary, PF_RING and io_uring have different focuses and serve different purposes. PF_RING specializes in high-speed packet capture and analysis, while io_uring is an I/O interface for efficient asynchronous I/O operations. The choice between the two depends on the specific requirements of your application, whether it's more network-centric or requires efficient I/O operations in a broader context.
+
