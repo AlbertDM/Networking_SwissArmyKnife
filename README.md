@@ -41,6 +41,7 @@ Investigate about:
 * Receive Side Scaling
 * BPF vs eBPF
 * PF_RING
+* Netlink
 
 
 ### io_uring vs PF_RING
@@ -68,3 +69,14 @@ Key Differences:
 
 In summary, PF_RING and io_uring have different focuses and serve different purposes. PF_RING specializes in high-speed packet capture and analysis, while io_uring is an I/O interface for efficient asynchronous I/O operations. The choice between the two depends on the specific requirements of your application, whether it's more network-centric or requires efficient I/O operations in a broader context.
 
+### Netlink
+
+Netlink is a communication mechanism in Linux-based operating systems that allows processes to communicate with the kernel. It provides a socket-based interface for sending and receiving network-related messages between user-space processes and the kernel.
+
+Netlink sockets are typically used for network configuration and monitoring purposes. They enable applications to interact with various networking subsystems, such as routing tables, network interfaces, multicast groups, and more. Netlink messages contain structured data that represents network-related information and commands.
+
+In Ubuntu, as well as other Linux distributions, Netlink is extensively used by system tools, network management utilities, and daemons for configuring network settings, monitoring network activity, and performing various network-related operations.
+
+By utilizing Netlink, applications can dynamically manage network configurations, retrieve network statistics, modify network routing tables, monitor network events, and perform other networking tasks programmatically.
+
+Netlink provides a flexible and efficient way to communicate between user-space and the kernel, making it a fundamental component of network management in Ubuntu and other Linux-based systems.
