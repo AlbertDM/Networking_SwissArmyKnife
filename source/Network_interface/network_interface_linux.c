@@ -189,3 +189,10 @@ int getNetworkInterfaces (NetworkInterface** interfaces, int* count) {
     return 0;
 }
 
+
+int initNetworkInterface(void) {
+
+
+}
+
+
