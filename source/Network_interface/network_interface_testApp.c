@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include "network_interface.h"
 
 int main() {
@@ -8,6 +9,7 @@ int main() {
     int result = getNetworkInterfaces(&interfaces, &count);
     if (result == 0) {
         printf("Number of interfaces: %d\n", count);
+        printf("---------------------\n");
         for (int i = 0; i < count; i++) {
             printf("Interface %d:\n", i+1);
             printf("Name: %s\n", interfaces[i].name);

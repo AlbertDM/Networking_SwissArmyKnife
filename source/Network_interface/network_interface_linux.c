@@ -7,8 +7,75 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <sys/ioctl.h>
+#include <sys/socket.h>
 #include <net/if_arp.h>
 #include "network_interface.h"
+
+#define LOCALHOST_IP 0x7F000001   // 127.0.0.1
+
+
+
+int getPromiscuousMode(const char* interfaceName) {
+    int sockfd;
+    struct ifreq ifr;
+
+    sockfd = socket(AF_INET, SOCK_DGRAM, 0);
+    if (sockfd < 0) {
+        perror("Socket creation failed");
+        return -1;
+    }
+
+    strncpy(ifr.ifr_name, interfaceName, IFNAMSIZ);
+
+    if (ioctl(sockfd, SIOCGIFFLAGS, &ifr) < 0) {
+        perror("IOCTL failed");
+        close(sockfd);
+        return -1;
+    }
+
+    close(sockfd);
+
+    return (ifr.ifr_flags & IFF_PROMISC) ? 1 : 0;
+}
+
+
+
+
+int setPromiscuousMode(const char* interfaceName, int enable) {
+    int sockfd;
+    struct ifreq ifr;
+
+    sockfd = socket(AF_INET, SOCK_DGRAM, 0);
+    if (sockfd < 0) {
+        perror("Socket creation failed");
+        return -1;
+    }
+
+    strncpy(ifr.ifr_name, interfaceName, IFNAMSIZ);
+
+    if (ioctl(sockfd, SIOCGIFFLAGS, &ifr) < 0) {
+        perror("IOCTL failed");
+        close(sockfd);
+        return -1;
+    }
+
+    if (enable) {
+        ifr.ifr_flags |= IFF_PROMISC;
+    } else {
+        ifr.ifr_flags &= ~IFF_PROMISC;
+    }
+
+    if (ioctl(sockfd, SIOCSIFFLAGS, &ifr) < 0) {
+        perror("IOCTL failed");
+        close(sockfd);
+        return -1;
+    }
+
+    close(sockfd);
+
+    return 0;
+}
+
 
 int getNetworkInterfaces (NetworkInterface** interfaces, int* count) {
     struct ifaddrs *ifaddr, *ifa;
@@ -55,6 +122,8 @@ int getNetworkInterfaces (NetworkInterface** interfaces, int* count) {
                 strncpy(iface->ip_class, "B", sizeof(iface->ip_class));
             } else if (firstByte >= 192 && firstByte <= 223) {
                 strncpy(iface->ip_class, "C", sizeof(iface->ip_class));
+            } else if (addr->sin_addr.s_addr == htonl(LOCALHOST_IP)) {
+                strncpy(iface->ip_class, "Local host", sizeof(iface->ip_class));
             } else {
                 strncpy(iface->ip_class, "Unknown", sizeof(iface->ip_class));
             }

@@ -35,7 +35,7 @@ subdir('source/Network_interface/network_interface')
 
 # Main library target
 library('Ethernet_SwissArmyKnife',
-  sources: ['source/Network_interface/network_interface.c'],
+  sources: ['source/Network_interface/network_interface_linux.c'],
   include_directories: ['include/Network_interface'],
   # dependencies: ['dependency1', 'dependency2', ...],
   version: '0.0.1',   # Version number for the library

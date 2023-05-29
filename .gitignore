@@ -12,6 +12,7 @@ build/
 meson-debug/
 meson-private/
 compile_commands.json
+.cache
 
 # Ignore editor-specific files
 .vscode/
