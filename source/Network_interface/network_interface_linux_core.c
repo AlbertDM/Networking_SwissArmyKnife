@@ -18,6 +18,12 @@
  */
 
 
+/// In this file goes all the core information that will not vary.
+/// IP, MAC, mask....
+
+
+
+
 
 #include <stdio.h>
 #include <string.h>
@@ -125,7 +131,7 @@ int getPromiscuousMode(int index, NetworkInterface* interfaces, int count) {
  * @param enable Flag indicating whether to enable (1) or disable (0) promiscuous mode.
  * @return 0 on success, or -1 on error.
  */
-int setPromiscuousMode(int index, NetworkInterface* interfaces, int count, int enable) {
+int setPromiscuousMode(int index, int enable, NetworkInterface* interfaces, int count){
     int sockfd;
     struct ifreq ifr;
 
@@ -334,4 +340,22 @@ int initNetworkInterface(void) {
   return 0;
 }
 
+
+
+/* 
+getNetworkInterfaces (to get the list of network interfaces and their static information)
+getDefaultGateway (to retrieve the default gateway for a network interface)
+getLinkUpDownEvents (to retrieve the number of link up/down events for a network interface)
+getSentPacketCount (to retrieve the number of sent packets for a network interface)
+getReceivedPacketCount (to retrieve the number of received packets for a network interface)
+getErrorStatistics (to retrieve error statistics for a network interface)
+getInterfaceThroughput (to retrieve the throughput of a network interface)
+setPromiscuousMode (to enable or disable promiscuous mode for a network interface)
+setDefaultGateway (to set the default gateway for a network interface)
+setInterfaceName (to set the name of a network interface)
+getIPClass (to get the IP class of a network interface)
+getBroadcastAddress (to get the broadcast address of a network interface)
+getMTU (to get the maximum transmission unit of a network interface)
+getLinkStatus (to get the link status of a network interface)
+*/
 

@@ -1,5 +1,7 @@
 // network_interface_info.c
 
+/// In this file goes all the information that can be taken directly from the array.
+
 #include "network_interface.h"
 #include <stdio.h>
 #include <stdlib.h>

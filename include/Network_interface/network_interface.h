@@ -73,6 +73,7 @@ typedef struct {
     char name[INTERFACE_NAME_LENGTH];        // Interface name
     // char ip_address[INET6_ADDRSTRLEN];       // IP address
     uint8_t ip_address[4];  // Array of 4 integers representing the IP address octets
+    uint8_t ip_address_aliasing[4];  // Array of 4 integers representing the IP address octets for "IP aliasing"
     // char mac_address[MAC_ADDRESS_STRLEN];    // MAC address
     uint8_t mac_address[6];  // Array of 6 integers representing the MAC address bytes
     int link_status;                         // Link status (1: up, 0: down)
@@ -172,7 +173,7 @@ int getLinkStatus(const char* interfaceName, int* status);
 int getInterfaceIndexByName(const char* interfaceName, const NetworkInterface* interfaces, int count);
 
 // Function to retrieve information about promiscuous mode for a network interface
-int getPromiscuousMode(int index, const NetworkInterface* interfaces, int count);
+int getPromiscuousMode(int index, NetworkInterface* interfaces, int count);
 
 // Function to set promiscuous mode for a network interface
 int setPromiscuousMode(int index, int enable, NetworkInterface* interfaces, int count);

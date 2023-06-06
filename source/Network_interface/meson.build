@@ -25,7 +25,10 @@ if host_system == 'windows'
 else
   # Linux
   include = ['../../include/Network_interface']
-  sources += ['network_interface_linux.c']
+  sources += ['network_interface_linux_core.c',
+              'network_interface_linux_static.c',
+              'network_interface_linux_dynamic.c',
+              'network_interface_linux_statistics.c']
   c_args += ['-D_GNU_SOURCE']
   dependencies_external = [
     cc.find_library('pcap')
