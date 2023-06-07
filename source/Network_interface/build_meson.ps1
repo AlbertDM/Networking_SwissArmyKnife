@@ -5,5 +5,5 @@ meson setup --wipe build
 meson setup build
 cd build
 ninja   
-# ninja test
+ninja test
 ninja install
