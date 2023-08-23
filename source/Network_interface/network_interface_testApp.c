@@ -13,8 +13,22 @@ int main() {
         for (int i = 0; i < count; i++) {
             printf("Interface %d:\n", i+1);
             printf("Name: %s\n", interfaces[i].name);
-            printf("IP Address: %s\n", interfaces[i].ip_address);
-            printf("MAC Address: %s\n", interfaces[i].mac_address);
+            printf("IP Address: ");
+            for (int j = 0; j < 4; j++) {
+              printf("%d", interfaces[i].ip_address[j]);
+              if (j < 3) {
+                printf(".");
+              }
+            }
+            printf("\n");
+            printf("MAC Address: ");
+            for (int j = 0; j < 6; j++) {
+              printf("%02X", interfaces[i].mac_address[j]);
+              if (j < 5) {
+                printf(":");
+              }
+            }
+            printf("\n");
             printf("Link Status: %d\n", interfaces[i].link_status);
             printf("IP Class: %s\n", interfaces[i].ip_class);
             printf("Broadcast Address: %s\n", interfaces[i].broadcast_address);
@@ -28,22 +42,23 @@ int main() {
     }
 
     // Test getPromiscuousMode
-    const char* interfaceName = "eth0"; // Replace with desired interface name
-    int promiscuousMode = getPromiscuousMode(interfaceName);
+    const char* interfaceName = "enp0s20f0u2"; // Replace with desired interface name
+    int index = getInterfaceIndexByName(interfaceName, interfaces, count);
+    int promiscuousMode = getPromiscuousMode(index, interfaces, count);
     if (promiscuousMode != -1) {
         printf("Promiscuous mode status for interface %s: %d\n", interfaceName, promiscuousMode);
     } else {
         printf("Failed to retrieve promiscuous mode status for interface %s\n", interfaceName);
     }
 
-    // Test setPromiscuousMode
-    int enable = 1; // 1 to enable, 0 to disable
-    int setPromiscuousResult = setPromiscuousMode(interfaceName, enable);
-    if (setPromiscuousResult == 0) {
-        printf("Promiscuous mode set successfully for interface %s\n", interfaceName);
-    } else {
-        printf("Failed to set promiscuous mode for interface %s\n", interfaceName);
-    }
+    // // Test setPromiscuousMode
+    // int enable = 1; // 1 to enable, 0 to disable
+    // int setPromiscuousResult = setPromiscuousMode(interfaceName, enable);
+    // if (setPromiscuousResult == 0) {
+    //     printf("Promiscuous mode set successfully for interface %s\n", interfaceName);
+    // } else {
+    //     printf("Failed to set promiscuous mode for interface %s\n", interfaceName);
+    // }
 
     return 0;
 }

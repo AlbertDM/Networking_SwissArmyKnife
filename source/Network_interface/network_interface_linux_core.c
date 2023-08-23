@@ -203,7 +203,14 @@ int getNetworkInterfaces (NetworkInterface** interfaces, int* count) {
     // Count the number of network interfaces
     for (ifa = ifaddr; ifa != NULL; ifa = ifa->ifa_next) {
         if (ifa->ifa_addr != NULL && ifa->ifa_addr->sa_family == AF_INET) {
+          printf("\n Interface is OK.");
+          printf("\t sa_family %d", ifa->ifa_addr->sa_family );
+          printf("\t ifa name %s", ifa->ifa_name );
             interfaceCount++;
+        } else { // Debugging 
+          printf("\n Interface is not applicable.");
+          printf("\t sa_family %d", ifa->ifa_addr->sa_family );
+          printf("\t ifa name %s", ifa->ifa_name );
         }
     }
 
@@ -325,14 +332,17 @@ int getNetworkInterfaces (NetworkInterface** interfaces, int* count) {
 
 int getMACAddress(int index, const NetworkInterface* interfaces, char* macAddress) {
     // Implementation of getMACAddress
+  return 0;
 }
 
 int getIPAddress(int index, const NetworkInterface* interfaces, char* ipAddress) {
     // Implementation of getIPAddress
+  return 0;
 }
 
 int getLinkStatus(int index, const NetworkInterface* interfaces, int* status) {
     // Implementation of getLinkStatus
+  return 0;
 }
 
 int initNetworkInterface(void) {
