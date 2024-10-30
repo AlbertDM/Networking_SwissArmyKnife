@@ -203,12 +203,12 @@ int getNetworkInterfaces (NetworkInterface** interfaces, int* count) {
     // Count the number of network interfaces
     for (ifa = ifaddr; ifa != NULL; ifa = ifa->ifa_next) {
         if (ifa->ifa_addr != NULL && ifa->ifa_addr->sa_family == AF_INET) {
-          printf("\n Interface is OK.");
+          printf("\n Interface OK\t");
           printf("\t sa_family %d", ifa->ifa_addr->sa_family );
           printf("\t ifa name %s", ifa->ifa_name );
             interfaceCount++;
         } else { // Debugging 
-          printf("\n Interface is not applicable.");
+          printf("\n Interface N/A\t");
           printf("\t sa_family %d", ifa->ifa_addr->sa_family );
           printf("\t ifa name %s", ifa->ifa_name );
         }
