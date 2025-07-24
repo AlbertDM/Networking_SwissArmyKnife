@@ -8,7 +8,7 @@ int main() {
     int count;
     int result = getNetworkInterfaces(&interfaces, &count);
     if (result == 0) {
-        printf("Number of interfaces: %d\n", count);
+        printf("\n\nNumber of interfaces: %d\n", count);
         printf("---------------------\n");
         for (int i = 0; i < count; i++) {
             printf("Interface %d:\n", i+1);
