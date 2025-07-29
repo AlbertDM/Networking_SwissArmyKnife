@@ -30,6 +30,36 @@ int getLinkStatus(int index, const NetworkInterface* interfaces, int* status) {
     // Implementation of getLinkStatus
 }
 
+/**
+ * @brief Retrieve the subnet mask of a network interface.
+ *
+ * Gets the netmask of the interface in dotted decimal format.
+ *
+ * @param index Index of the interface.
+ * @param interfaces Array of NetworkInterface structures.
+ * @param netmask Output buffer for the netmask.
+ * @return 0 on success, -1 on failure.
+ */
+int getNetmask(int index, const NetworkInterface* interfaces, char* netmask) {
+    // TODO: implement this
+    return 0;
+}
+
+/**
+ * @brief Get the type of a network interface.
+ *
+ * Types may include Ethernet, loopback, VLAN, etc.
+ *
+ * @param index Index of the interface.
+ * @param interfaces Array of NetworkInterface structures.
+ * @param type Output buffer for the interface type string.
+ * @return 0 on success, -1 on failure.
+ */
+int getInterfaceType(int index, const NetworkInterface* interfaces, char* type) {
+    // TODO: implement this
+    return 0;
+}
+
 
 
 // ... other information functions

@@ -11,7 +11,7 @@ int main() {
         printf("\n\nNumber of interfaces: %d\n", count);
         printf("---------------------\n");
         for (int i = 0; i < count; i++) {
-            printf("Interface %d:\n", i+1);
+            printf("Interface: %d\n", i+1);
             printf("Name: %s\n", interfaces[i].name);
             printf("IP Address: ");
             for (int j = 0; j < 4; j++) {

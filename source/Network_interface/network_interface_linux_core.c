@@ -352,6 +352,42 @@ int initNetworkInterface(void) {
 
 
 
+/**
+ * @brief Enable or disable a network interface.
+ *
+ * This function brings an interface up or down using ioctl SIOCSIFFLAGS.
+ *
+ * @param index Index of the interface in the interfaces array.
+ * @param up 1 to enable (up), 0 to disable (down).
+ * @param interfaces Array of NetworkInterface structures.
+ * @param count Number of interfaces in the array.
+ * @return 0 on success, -1 on failure.
+ */
+int toggleInterfaceState(int index, int up, NetworkInterface* interfaces, int count) {
+    // TODO: implement this
+    return 0;
+}
+
+/**
+ * @brief Rename a network interface at runtime.
+ *
+ * This function uses ioctl SIOCSIFNAME to rename an interface.
+ *
+ * @param index Index of the interface in the interfaces array.
+ * @param newName New name for the interface.
+ * @param interfaces Array of NetworkInterface structures.
+ * @param count Number of interfaces in the array.
+ * @return 0 on success, -1 on failure.
+ */
+int renameInterface(int index, const char* newName, NetworkInterface* interfaces, int count) {
+    // TODO: implement this
+    return 0;
+}
+
+
+
+
+
 /* 
 getNetworkInterfaces (to get the list of network interfaces and their static information)
 getDefaultGateway (to retrieve the default gateway for a network interface)

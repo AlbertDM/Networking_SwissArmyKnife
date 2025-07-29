@@ -55,3 +55,48 @@ int main() {
     return 0;
 }
 #endif
+
+
+
+/**
+ * @brief Convert a string-formatted IP address to 4-byte format.
+ *
+ * Parses a string like "192.168.1.1" into an array of 4 bytes.
+ *
+ * @param ipStr Input string with dotted IP.
+ * @param ip Output 4-byte array.
+ * @return 0 on success, -1 on failure.
+ */
+int parseIPAddress(const char* ipStr, unsigned char* ip) {
+    // TODO: implement this
+    return 0;
+}
+
+
+
+/**
+ * @brief Format a binary MAC address into human-readable form.
+ *
+ * Converts 6-byte MAC address into "xx:xx:xx:xx:xx:xx" string.
+ *
+ * @param mac 6-byte MAC address array.
+ * @param buffer Output string buffer.
+ */
+void formatMACAddress(const unsigned char* mac, char* buffer) {
+    // TODO: implement this
+}
+
+
+
+/**
+ * @brief Check if the given interface is a loopback interface.
+ *
+ * This is usually used to skip non-relevant interfaces like 'lo'.
+ *
+ * @param iface Pointer to the NetworkInterface struct.
+ * @return 1 if loopback, 0 otherwise.
+ */
+int isLoopbackInterface(const NetworkInterface* iface) {
+    // TODO: implement this
+    return 0;
+}
