@@ -44,6 +44,29 @@
 #define LOCALHOST_IP 0x7F000001   // 127.0.0.1
 
 
+
+/**
+ * @brief Checks for common invalid arguments (NULL interfaces, out-of-bounds index).
+ *
+ * This function provides a unified way to validate the `interfaces` array,
+ * `index`, and `count` parameters used across many network interface functions.
+ * It prints an error message to stderr if validation fails.
+ *
+ * @param interfaces Pointer to the array of NetworkInterface structures.
+ * @param index The index to check.
+ * @param count The total number of interfaces in the array.
+ * @param function_name The name of the calling function for error reporting.
+ * @return 0 on success (arguments are valid), -1 on failure (arguments are invalid).
+ */
+int check_interface_arguments(const NetworkInterface* interfaces, int index, int count, const char* function_name) {
+    if (interfaces == NULL || index < 0 || index >= count) {
+        fprintf(stderr, "Error: Invalid interface index or NULL interfaces array in %s.\n", function_name);
+        return -1;
+    }
+    return 0;
+}
+
+
 /**
  * @brief Get the index of a network interface by name.
  *
@@ -57,6 +80,12 @@
  */
 int getInterfaceIndexByName(const char* interfaceName, const NetworkInterface* interfaces, int count) {
     int index = -1; // Default value indicating interface not found
+
+    // Error check
+    if (interfaceName == NULL || interfaces == NULL || count <= 0) {
+        fprintf(stderr, "Error: Invalid arguments to getInterfaceIndexByName.\n");
+        return -1;
+    }
 
     // Iterate through the network interfaces array
     for (int i = 0; i < count; i++) {
@@ -86,6 +115,11 @@ int getInterfaceIndexByName(const char* interfaceName, const NetworkInterface* i
 int getPromiscuousMode(int index, NetworkInterface* interfaces, int count) {
     int sockfd;
     struct ifreq ifr;
+
+    // Error check
+    if (check_interface_arguments(interfaces, index, count, __func__) != 0) {
+        return -1;
+    }
 
     // Create a socket for ioctl operations
     sockfd = socket(AF_INET, SOCK_DGRAM, 0);

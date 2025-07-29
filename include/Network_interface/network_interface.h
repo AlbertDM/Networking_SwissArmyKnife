@@ -26,7 +26,6 @@
 #include <iphlpapi.h>
 #include <Ws2tcpip.h> // Definition of INET6_ADDRSTRLEN
 
-
 #define INTERFACE_NAME_LENGTH MAX_ADAPTER_NAME_LENGTH
 #define MAC_ADDR_LEN 6  /* 6 Octets in one ethernet addr */
 
@@ -50,14 +49,19 @@
 
 // === Defines === //
 //
-#define DUPLEX_MODE_LENGTH 8
-// IPv4 address size (binary)
 #ifndef IPV4_ADDR_LEN
-#define IPV4_ADDR_LEN 4
+#define IPV4_ADDR_LEN 4   // IPv4 address size (binary)
 #endif
+#ifndef INTERFACE_NAME_LENGTH
+#define INTERFACE_NAME_LENGTH 64
+#endif
+#define DRIVER_NAME_LENGTH 32
+#define DUPLEX_MODE_LENGTH 8
+#define INTERFACE_TYPE_LENGTH 16
 #define IP_CLASS_LEN 16
 #define IP_STRING_LENGTH 46   // Enough for IPv6
 #define MAC_ADDRESS_STRLEN 18
+#define PCI_DEVICE_LENGTH 32
 
 
 // === Global Variables === //
@@ -76,37 +80,54 @@
 // === Type Definitions === //
 //
 
-// Structure to hold information about a network interface.
 typedef struct {
-    char name[INTERFACE_NAME_LENGTH];        // Interface name
-    // char ip_address[INET6_ADDRSTRLEN];       // IP address
-    uint8_t ip_address[IPV4_ADDR_LEN];  // Array of 4 integers representing the IP address octets
-    uint8_t ip_address_aliasing[IPV4_ADDR_LEN];  // Array of 4 integers representing the IP address octets for "IP aliasing"
-    // char mac_address[MAC_ADDRESS_STRLEN];    // MAC address
-    uint8_t mac_address[MAC_ADDR_LEN];  // Array of 6 integers representing the MAC address bytes
-    int link_status;                         // Link status (1: up, 0: down)
-    char ip_class[IP_CLASS_LEN];             // IP address class (e.g., A, B, C)
-    char broadcast_address[INET6_ADDRSTRLEN]; // Broadcast address
-    int mtu;                                 // Maximum Transmission Unit (MTU)
-    int is_promiscuous;                      // Promiscuous mode status (1: enabled, 0: disabled)
-    char default_gateway[INET6_ADDRSTRLEN];   // Default gateway IP address
+    uint8_t ip[IPV4_ADDR_LEN];              // IPv4 address
+    uint8_t alias[IPV4_ADDR_LEN];           // Alias address (if any)
+    char broadcast[IP_STRING_LENGTH];       // Broadcast address
+    char gateway[IP_STRING_LENGTH];         // Default gateway
+    int mtu;                                // Maximum Transmission Unit
+} InterfaceAddressInfo;
 
-    // Additional fields for deep analysis of the network interface
-    int link_up_down_events;                 // Number of link up/down events
-    int packets_sent;                        // Number of sent packets
-    int packets_received;                    // Number of received packets
-    int error_statistics;                    // Error statistics
-    int interface_throughput;                // Interface throughput
+typedef struct {
+    int link_status;                        // 1 = up, 0 = down
+    int is_promiscuous;                     // 1 = enabled, 0 = disabled
+    int speed_mbps;                         // Negotiated speed
+    char duplex_mode[DUPLEX_MODE_LENGTH];   // "full" or "half"
+    int vlan_id;                            // VLAN ID (if tagged)
+    int tx_queue_len;                       // TX queue length
+    int num_rx_queues;                      // Number of RX queues
+} InterfaceLinkInfo;
 
-    // Add more fields for further analysis as needed
-    // ...
-    // Network latency measurements
-    // Jitter measurements
-    // Packet loss statistics
-    // Quality of Service (QoS) parameters
-    // Bandwidth utilization
-    // Network protocol information (e.g., TCP, UDP)
+typedef struct {
+    int packets_sent;
+    int packets_received;
+    int errors;
+    int dropped;
+    int collisions;
+    int throughput_kbps;                    // Computed from stats
+} InterfaceStats;
+
+typedef struct {
+    float latency_ms;
+    float jitter_ms;
+    float packet_loss_pct;
+    int qos_priority;                       // DSCP or other tag
+} InterfaceQoS;
+
+typedef struct {
+    char name[INTERFACE_NAME_LENGTH];             // Interface name (e.g. eth0)
+    uint8_t mac[MAC_ADDR_LEN];                    // MAC address (binary format)
+    char interface_type[INTERFACE_TYPE_LENGTH];   // "ethernet", "loopback", etc.
+    char driver_name[DRIVER_NAME_LENGTH];         // e.g. "e1000e", "ixgbe"
+    char pci_device[PCI_DEVICE_LENGTH];           // PCI bus info (Linux)
+
+    InterfaceAddressInfo addr;
+    InterfaceLinkInfo link;
+    InterfaceStats stats;
+    InterfaceQoS qos;
 } NetworkInterface;
+
+
 
 // Enum definition
 //
@@ -121,6 +142,9 @@ typedef struct {
 
 // Initialize internal data structures for network interface management
 int initNetworkInterface(void);
+
+// Checks for common invalid arguments (NULL interfaces, out-of-bounds index).
+int check_interface_arguments(const NetworkInterface* interfaces, int index, int count, const char* function_name);
 
 // Retrieve a list of all network interfaces in the system
 int getNetworkInterfaces(NetworkInterface** interfaces, int* count);

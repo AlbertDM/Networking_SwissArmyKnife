@@ -1,5 +1,131 @@
 # Networking_SwissArmyKnife
 
+Modular OSI-Based Networking Toolchain
+
+A proposed architecture that separates control and observability by OSI layer.
+
+
+
+## Layer 1: Physical
+
+- **Tool**: `interface_tool`
+- **Responsibilities**:
+  - MAC address
+  - Link status
+  - Speed / Duplex
+  - MTU
+  - Driver, PCI info
+  - Promiscuous mode
+  - Queue lengths
+
+## Layer 2: Data Link
+
+- **Tool**: `vlan_tool`, `macsec_tool`, `bridge_tool`
+- **Responsibilities**:
+  - VLAN ID and tagging
+  - MACsec status
+  - Bridge forwarding tables
+  - Bonding/LAG info
+
+## Layer 3: Network
+
+- **Tool**: `ip_tool`, `icmp_tool`, `arp_tool`
+- **Responsibilities**:
+  - IPv4/IPv6 addresses
+  - Routes, default gateways
+  - ARP/NDP tables
+  - IP forwarding settings
+
+## Layer 4: Transport
+
+- **Tool**: `socket_tool`, `tcp_tool`, `udp_tool`, `tls_tool`
+- **Responsibilities**:
+  - TCP/UDP port usage
+  - Socket states (listen, established)
+  - Retransmissions, RTT
+  - TLS session info
+
+## Layer 5–7: Session / Presentation / Application
+
+- **Tool**: `http_tool`, `mqtt_tool`, `custom_appmon`
+- **Responsibilities**:
+  - Payload tracing
+  - Protocol decoding
+  - Application-level observability (user-agents, topics, etc.)
+
+## Cross-Layer Features
+
+- **Shared struct**: `NetworkInterface`
+- **Platform targets**: Linux, Zephyr, Windows
+- **Access coordination**:
+  - Interface metadata → used as base by upper layers
+  - Compile-time `#ifdef` for OS-specific features
+
+## Example Commands
+
+```bash
+netknife interface           # L1
+netknife vlan --if eth0      # L2
+netknife ip --details        # L3
+netknife tcp --show-sockets  # L4
+netknife http --filter POST  # L7
+```
+
+```
+┌─────────────────────────────────────────────┐
+│            Application Layer (L7)           │
+│ ┌─────────────────────────────────────────┐ │
+│ │  http_tool | mqtt_tool | custom_appmon  │ │
+│ └─────────────────────────────────────────┘ │
+│     Decode/trace protocols, statistics      │
+└─────────────────────────────────────────────┘
+                  ▲
+┌─────────────────────────────────────────────┐
+│          Transport Layer (L4)               │
+│ ┌─────────────────────────────────────────┐ │
+│ │       tcp_tool | udp_tool | tls_tool    │ │
+│ └─────────────────────────────────────────┘ │
+│    Ports, connection states, seq/ack stats  │
+└─────────────────────────────────────────────┘
+                  ▲
+┌─────────────────────────────────────────────┐
+│           Network Layer (L3)                │
+│ ┌─────────────────────────────────────────┐ │
+│ │       ip_tool | icmp_tool | arp_tool    │ │
+│ └─────────────────────────────────────────┘ │
+│      IP addresses, routes, ARP tables       │
+└─────────────────────────────────────────────┘
+                  ▲
+┌─────────────────────────────────────────────┐
+│         Data Link Layer (L2)                │
+│ ┌─────────────────────────────────────────┐ │
+│ │      vlan_tool | macsec_tool | bridge   │ │
+│ └─────────────────────────────────────────┘ │
+│     VLANs, MAC filtering, forwarding rules  │
+└─────────────────────────────────────────────┘
+                  ▲
+┌─────────────────────────────────────────────┐
+│         Physical Layer (L1)                 │
+│ ┌─────────────────────────────────────────┐ │
+│ │           interface_tool                │ │
+│ └─────────────────────────────────────────┘ │
+│ Link state, MAC, speed, queues, driver info │
+└─────────────────────────────────────────────┘
+
+                    │
+        ┌────────────┴────────────┐
+        ▼                         ▼
+┌────────────────┐      ┌────────────────────┐
+│ Linux backend  │      │ Zephyr/Windows port│
+└────────────────┘      └────────────────────┘
+```
+
+
+
+
+
+-----
+
 When creating a library in C to work with Ethernet interfaces, here are some ideas for the functionality the library could provide:
 
 1. Interface Enumeration: The library can provide functions to enumerate and retrieve information about available network interfaces, such as their names, IP addresses, MAC addresses, and link status.
