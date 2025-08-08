@@ -145,7 +145,7 @@ int getPromiscuousMode(int index, NetworkInterface* interfaces, int count) {
     int promiscuousMode = (ifr.ifr_flags & IFF_PROMISC) ? 1 : 0;
 
     // Update the is_promiscuous field in the corresponding NetworkInterface structure
-    interfaces[index].is_promiscuous = promiscuousMode;
+    interfaces[index].link.is_promiscuous = promiscuousMode;
 
     return promiscuousMode;
 }
@@ -204,7 +204,7 @@ int setPromiscuousMode(int index, int enable, NetworkInterface* interfaces, int 
     close(sockfd);
 
     // Update the is_promiscuous field in the corresponding NetworkInterface structure
-    interfaces[index].is_promiscuous = enable;
+    interfaces[index].link.is_promiscuous = enable;
 
     return 0;
 }
@@ -269,15 +269,16 @@ int getNetworkInterfaces (NetworkInterface** interfaces, int* count) {
 #if 1 
           struct sockaddr_in* addr = (struct sockaddr_in*)ifa->ifa_addr;
           uint32_t ip = ntohl(addr->sin_addr.s_addr);
-          iface->ip_address[0] = (ip >> 24) & 0xFF;
-          iface->ip_address[1] = (ip >> 16) & 0xFF;
-          iface->ip_address[2] = (ip >> 8) & 0xFF;
-          iface->ip_address[3] = ip & 0xFF;
+          iface->addr.ip[0] = (ip >> 24) & 0xFF;
+          iface->addr.ip[1] = (ip >> 16) & 0xFF;
+          iface->addr.ip[2] = (ip >> 8) & 0xFF;
+          iface->addr.ip[3] = ip & 0xFF;
 #else
           struct sockaddr_in* addr = (struct sockaddr_in*)ifa->ifa_addr;
           inet_ntop(AF_INET, &(addr->sin_addr), iface->ip_address, INET6_ADDRSTRLEN);
 #endif 
 
+#if 0
             // Get IP address class
             unsigned char firstByte = addr->sin_addr.s_addr & 0xFF;
             if (firstByte >= 1 && firstByte <= 126) {
@@ -291,13 +292,14 @@ int getNetworkInterfaces (NetworkInterface** interfaces, int* count) {
             } else {
                 strncpy(iface->ip_class, "Unknown", sizeof(iface->ip_class));
             }
+#endif
 
             // Get broadcast address
             struct sockaddr_in* bcast = (struct sockaddr_in*)ifa->ifa_broadaddr;
             if (bcast != NULL) {
-                inet_ntop(AF_INET, &(bcast->sin_addr), iface->broadcast_address, INET6_ADDRSTRLEN);
+                inet_ntop(AF_INET, &(bcast->sin_addr), iface->addr.broadcast, INET6_ADDRSTRLEN);
             } else {
-                strcpy(iface->broadcast_address, "N/A");
+                strcpy(iface->addr.broadcast, "N/A");
             }
 
             // Get MAC address
@@ -308,11 +310,11 @@ int getNetworkInterfaces (NetworkInterface** interfaces, int* count) {
                 unsigned char* mac = (unsigned char*)ifreq.ifr_hwaddr.sa_data;
 #if 1                 
                 for (int i = 0; i < 6; i++) {
-                    iface->mac_address[i] = mac[i];
+                    iface->mac[i] = mac[i];
                 }
             } else {
                 // Set MAC address as all zeros
-                memset(iface->mac_address, 0, sizeof(iface->mac_address));
+                memset(iface->mac, 0, sizeof(iface->mac));
             }
 
 #else
@@ -329,27 +331,27 @@ int getNetworkInterfaces (NetworkInterface** interfaces, int* count) {
             memset(&ifr, 0, sizeof(ifr));
             strncpy(ifr.ifr_name, ifa->ifa_name, IFNAMSIZ - 1);
             if (ioctl(fd, SIOCGIFFLAGS, &ifr) != -1) {
-                iface->link_status = (ifr.ifr_flags & IFF_UP) ? 1 : 0;
+                iface->link.link_status = (ifr.ifr_flags & IFF_UP) ? 1 : 0;
             } else {
-                iface->link_status = -1;  // Unknown
+                iface->link.link_status = -1;  // Unknown
             }
             close(fd);
 
             // Get MTU
             fd = socket(AF_INET, SOCK_DGRAM, 0);
             if (ioctl(fd, SIOCGIFMTU, &ifr) != -1) {
-                iface->mtu = ifr.ifr_mtu;
+                iface->addr.mtu = ifr.ifr_mtu;
             } else {
-                iface->mtu = -1;  // Unknown
+                iface->addr.mtu = -1;  // Unknown
             }
             close(fd);
 
             // Get promiscuous mode status
             fd = socket(AF_INET, SOCK_DGRAM, 0);
             if (ioctl(fd, SIOCGIFFLAGS, &ifr) != -1) {
-                iface->is_promiscuous = (ifr.ifr_flags & IFF_PROMISC) ? 1 : 0;
+                iface->link.is_promiscuous = (ifr.ifr_flags & IFF_PROMISC) ? 1 : 0;
             } else {
-                iface->is_promiscuous = -1;  // Unknown
+                iface->link.is_promiscuous = -1;  // Unknown
             }
             close(fd);
 

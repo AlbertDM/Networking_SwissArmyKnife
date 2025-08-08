@@ -15,7 +15,7 @@ int main() {
             printf("Name: %s\n", interfaces[i].name);
             printf("IP Address: ");
             for (int j = 0; j < 4; j++) {
-              printf("%d", interfaces[i].ip_address[j]);
+              printf("%d", interfaces[i].addr.ip[j]);
               if (j < 3) {
                 printf(".");
               }
@@ -23,17 +23,17 @@ int main() {
             printf("\n");
             printf("MAC Address: ");
             for (int j = 0; j < 6; j++) {
-              printf("%02X", interfaces[i].mac_address[j]);
+              printf("%02X", interfaces[i].mac[j]);
               if (j < 5) {
                 printf(":");
               }
             }
             printf("\n");
-            printf("Link Status: %d\n", interfaces[i].link_status);
-            printf("IP Class: %s\n", interfaces[i].ip_class);
-            printf("Broadcast Address: %s\n", interfaces[i].broadcast_address);
-            printf("MTU: %d\n", interfaces[i].mtu);
-            printf("Promiscuous Mode: %d\n", interfaces[i].is_promiscuous);
+            printf("Link Status: %d\n", interfaces[i].link.link_status);
+            /* Legacy: printf("IP Class: %s\n", interfaces[i].ip_class); */
+            printf("Broadcast Address: %s\n", interfaces[i].addr.broadcast);
+            printf("MTU: %d\n", interfaces[i].addr.mtu);
+            printf("Promiscuous Mode: %d\n", interfaces[i].link.is_promiscuous);
             printf("---------------------\n");
         }
         free(interfaces);

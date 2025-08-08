@@ -7,7 +7,7 @@ void print_interface_info(NetworkInterface* iface) {
     printf("MAC Address: %s\n", iface->mac_address);
     printf("Link Status: %s\n", (iface->link_status == 1) ? "Up" : "Down");
     printf("IP Class: %s\n", iface->ip_class);
-    printf("Broadcast Address: %s\n", iface->broadcast_address);
+    printf("Broadcast Address: %s\n", iface->addr.broadcast);
     printf("MTU: %d\n", iface->mtu);
     printf("Promiscuous Mode: %s\n", (iface->is_promiscuous == 1) ? "Enabled" : "Disabled");
     printf("-------------------------------------\n");
